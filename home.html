@@ -1,0 +1,96 @@
+<html>
+<head>
+<script type="text/javascript" src="smoothie-master/standalone/require.js"></script>
+
+<script>
+
+  var antlr4 = require('antlr4/index');
+   
+   var TodoLexer = require('todoLexer');
+   
+	var TodoParser = require('todoParser');
+	
+	var TodoListener = require('todoListener'); 
+
+	
+function func(){
+   
+   var input = document.getElementById("txt").value;
+   
+   console.log(input);	
+    var chars = new antlr4.InputStream(input);
+    var lexer = new TodoLexer.todoLexer(chars);
+
+    var tokens  = new antlr4.CommonTokenStream(lexer);
+	
+
+    var parser = new TodoParser.todoParser(tokens);
+	console.log(parser);
+
+    parser.buildParseTrees = true;
+
+    var tree = parser.r();
+	
+
+    console.log("Parsed: "+ tree.toStringTree());
+	
+	
+
+  
+
+
+   
+  
+	
+	
+  var printer = new TodoListener.todoListener();
+ antlr4.tree.ParseTreeWalker.DEFAULT.walk(printer, tree);
+   
+   			 
+
+   
+  
+  };
+  
+  
+
+// override default listener behavior
+	TodoListener.todoListener.prototype.exitTable_name = function(ctx) {
+	document.getElementById("s").innerHTML=ctx.getText();
+};
+
+	  TodoListener.todoListener.prototype.exitAttribute_list = function(ctx) {
+    document.getElementById("t").innerHTML=ctx.getText();
+};
+ 
+     
+
+
+  
+</script >
+
+
+</head>
+<body>
+
+<textarea id="txt" rows="4" cols="50">
+</textarea>
+
+<button onclick="func()"> submit query 
+</button>
+
+<table border=1>
+<thborder=0>
+<td>SOURCE</td>
+<td>TRANSFORMATION LOGIC</td>
+<td>DESTINATION</td>
+</th>
+<tr>
+<td id="s"></td>
+<td id="t"></td>
+<td id="d"></td>
+</tr>
+</table>
+
+</body>
+</html>
